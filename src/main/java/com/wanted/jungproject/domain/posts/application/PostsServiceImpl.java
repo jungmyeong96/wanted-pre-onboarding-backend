@@ -2,6 +2,7 @@ package com.wanted.jungproject.domain.posts.application;
 
 import com.wanted.jungproject.domain.posts.domain.Posts;
 import com.wanted.jungproject.domain.posts.domain.PostsRepository;
+import com.wanted.jungproject.domain.posts.dto.PostsListResponse;
 import com.wanted.jungproject.domain.posts.dto.PostsResponse;
 import com.wanted.jungproject.domain.posts.dto.PostsSaveRequest;
 import com.wanted.jungproject.domain.posts.dto.PostsUpdateRequest;
@@ -11,6 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -33,7 +37,7 @@ public class PostsServiceImpl implements IPostsService{
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다!! id=" + id));
         posts.updatePost(postsUpdateRequest.getTitle(), postsUpdateRequest.getContent());
 
-        return id;
+        return postsRepository.save(posts).getId();
     }
 
     @Transactional
@@ -47,6 +51,12 @@ public class PostsServiceImpl implements IPostsService{
         Posts posts = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다!! id=" + id));
         return PostsResponse.builder().posts(posts).build();
+    }
+
+    public List<PostsListResponse> findAllDesc(Long id) { //posts의 stream을 map을 통해 변환하고 list에 저장
+        return postsRepository.findAllDesc().stream()
+                .map(PostsListResponse::new)
+                .collect(Collectors.toList());
     }
 
 }

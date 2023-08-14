@@ -140,6 +140,12 @@ class PostsServiceImplTest {
         // Additional assertion to check if the post is marked as deleted
     }
 
+    @Test
+    @DisplayName("[서비스 테스트] 아이디 내림차순 목록가져오기 테스트")
+    public void checkFindByIdDesc() {
+
+    }
+
 
     private PostsSaveRequest createPostsSaveRequest() {
         return PostsSaveRequest.builder()

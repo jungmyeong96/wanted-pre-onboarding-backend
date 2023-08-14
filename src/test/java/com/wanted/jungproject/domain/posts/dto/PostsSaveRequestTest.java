@@ -12,7 +12,7 @@ class PostsSaveRequestTest {
 
     @Test
     @DisplayName("[DTO 테스트] 게시물 저장 DTO 테스트")
-    public void createPostsSaveRequest() {
+    public void createPostsSaveRequest() throws Exception {
         //Given
         PostsSaveRequest postsSaveRequest;
 
@@ -30,6 +30,7 @@ class PostsSaveRequestTest {
     }
 
     @Test
+    @DisplayName("[DTO 테스트] 엔티티 변환 테스트")
     public void checkToEntity() throws Exception  {
         //Given
         PostsSaveRequest postsSaveRequest;
