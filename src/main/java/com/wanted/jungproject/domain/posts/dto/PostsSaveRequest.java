@@ -1,5 +1,6 @@
 package com.wanted.jungproject.domain.posts.dto;
 
+import com.wanted.jungproject.domain.posts.domain.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,13 @@ public class PostsSaveRequest {
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    public Posts toEntity() {
+        return Posts.builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build();
     }
 }

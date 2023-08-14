@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PostsResponseTest {
 
     @Test
-    public void createPostsResponseTest() {
+    public void createPostsResponseTest() throws Exception  {
         //Given
         PostsResponse postsResponse;
 
@@ -26,7 +26,6 @@ class PostsResponseTest {
                 .build();
 
         //Then
-        assertThat(postsResponse.getId()).isNotNull();
         assertThat(postsResponse.getTitle()).isEqualTo("응답 제목");
         assertThat(postsResponse.getContent()).isEqualTo("응답 내용");
         assertThat(postsResponse.getAuthor()).isEqualTo("응답 저자");

@@ -16,15 +16,17 @@ public class Posts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+
     @Column(length = 500, nullable = false)
     private String title;
 
-    @NotNull
-    @Column(columnDefinition = "CONTENT..", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     private String author;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
 
     @Builder
     public Posts(String title, String content, String author) {
@@ -36,5 +38,13 @@ public class Posts {
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void markAsDeleted() {
+        this.deleted = true;
     }
 }

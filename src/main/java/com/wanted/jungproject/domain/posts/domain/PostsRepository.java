@@ -1,4 +1,4 @@
-package com.wanted.jungproject.domain.posts.dao;
+package com.wanted.jungproject.domain.posts.domain;
 
 import com.wanted.jungproject.domain.posts.domain.Posts;
 import org.springframework.data.jpa.repository.JpaRepository;

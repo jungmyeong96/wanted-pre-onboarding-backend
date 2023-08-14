@@ -1,4 +1,4 @@
-package com.wanted.jungproject.domain.posts;
+package com.wanted.jungproject.domain.posts.domain;
 
 import com.wanted.jungproject.domain.posts.domain.Posts;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,7 @@ class PostsTest {
 
     @Test
     @DisplayName("[도메인 테스트] Posts 생성")
-    public void createPostsTest() {
+    public void createPostsTest() throws Exception {
         //Given
         Posts post;
 
@@ -42,7 +42,7 @@ class PostsTest {
 
     @Test
     @DisplayName("[도메인 테스트] Posts 수정")
-    public void updatePost() {
+    public void updatePost() throws Exception  {
         //Given
         Posts post = Posts.builder()
                 .title("테스트 게시물 제목")
@@ -52,7 +52,6 @@ class PostsTest {
 
         //When
         post.updatePost("수정된 테스트 게시물 제목", "수정된 테스트 게시물 내용");
-
 
         //Then
         assertThat(post.getTitle()).isEqualTo("수정된 테스트 게시물 제목");

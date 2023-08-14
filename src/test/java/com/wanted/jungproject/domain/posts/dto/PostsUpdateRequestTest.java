@@ -10,7 +10,7 @@ class PostsUpdateRequestTest {
 
     @Test
     @DisplayName("[DTO 테스트] 게시물 업데이트 DTO 테스트")
-    public void createPostsUpdateRequest() {
+    public void createPostsUpdateRequest() throws Exception  {
 
         //Given
         PostsUpdateRequest postsUpdateRequest;
