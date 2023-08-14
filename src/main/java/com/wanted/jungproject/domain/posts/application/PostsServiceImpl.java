@@ -10,6 +10,8 @@ import com.wanted.jungproject.domain.posts.dto.PostsUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,11 @@ public class PostsServiceImpl implements IPostsService{
         return postsRepository.findAllDesc().stream()
                 .map(PostsListResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    public Page<Posts> findPosts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return postsRepository.findAllByOrderByIdDesc(pageRequest);
     }
 
 }
