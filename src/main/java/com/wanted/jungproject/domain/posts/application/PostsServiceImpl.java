@@ -63,7 +63,7 @@ public class PostsServiceImpl implements IPostsService{
 
     public Page<Posts> findPosts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return postsRepository.findAllByOrderByIdDesc(pageRequest);
+        return postsRepository.findByDeletedOrderByIdDesc(false, pageRequest);
     }
 
 }
