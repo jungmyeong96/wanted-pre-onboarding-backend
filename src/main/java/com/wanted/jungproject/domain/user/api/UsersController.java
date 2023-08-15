@@ -33,7 +33,7 @@ public class UsersController {
 
     @PostMapping("/users/new") //회원가입 정보 전달 메인 페이지로 이동
     @Operation(summary = "회원 가입 정보 저장", description = "각종 개인정보를 전달합니다", tags = {"Users"})
-    public ResponseEntity<String> createUsers(@RequestBody @Valid UserSignUp userSignUp, Errors errors, Model model) {
+    public ResponseEntity<String> createUsers(@RequestBody @Valid UserSignUp userSignUp, Errors errors, Model model) throws Exception {
         if (errors.hasErrors()) {
             /* 회원가입 실패시 입력 데이터 값을 유지 */
             model.addAttribute("userSignUp", userSignUp);
@@ -46,7 +46,7 @@ public class UsersController {
             /* 회원가입 페이지로 다시 리턴 */
             return  new ResponseEntity<>("users/createUsersForm", HttpStatus.BAD_REQUEST);
         }
-        Long userId = usersServiceImpl.signUp(userSignUp);
+        Long userId = usersServiceImpl.signUp(userSignUp) ;
         return new ResponseEntity<>("mainPage", HttpStatus.OK);
     }
 }

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -28,19 +29,27 @@ public class Users {
     private String email;
 
     @Column(nullable = false, length = 80)
-    private String passwrod;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Builder
-    public Users(String name, String address, String email, String passwrod, Role role) {
+    public Users(String name, String address, String email, String password, Role role) {
         this.name = name;
         this.address = address;
         this.email = email;
-        this.passwrod = passwrod;
+        this.password = password;
         this.role = role;
     }
 
+    public Users hashPassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+        return this;
+    }
+
+    public boolean checkPassword(String plainPassword, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(plainPassword, this.password);
+    }
 }
