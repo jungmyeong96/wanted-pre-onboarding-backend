@@ -1,8 +1,10 @@
 package com.wanted.jungproject.domain.user.api;
 
+import com.wanted.jungproject.domain.auth.dto.TokenInfoRequest;
+import com.wanted.jungproject.domain.auth.dto.TokenInfoResponse;
 import com.wanted.jungproject.domain.user.application.IUsersService;
-import com.wanted.jungproject.domain.user.domain.UsersRepository;
-import com.wanted.jungproject.domain.user.dto.UserSignUp;
+import com.wanted.jungproject.domain.user.dto.UserSignInRequest;
+import com.wanted.jungproject.domain.user.dto.UserSignUpRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -12,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,12 +32,12 @@ public class UsersController {
         return "users/createUsersForm";
     }
 
-    @PostMapping("/users/new") //회원가입 정보 전달 메인 페이지로 이동
+    @PostMapping("/users/signup") //회원가입 정보 전달 메인 페이지로 이동
     @Operation(summary = "회원 가입 정보 저장", description = "각종 개인정보를 전달합니다", tags = {"Users"})
-    public ResponseEntity<String> createUsers(@RequestBody @Valid UserSignUp userSignUp, Errors errors, Model model) throws Exception {
+    public ResponseEntity<String> createUsers(@RequestBody @Valid UserSignUpRequest userSignUpRequest, Errors errors, Model model) throws Exception {
         if (errors.hasErrors()) {
             /* 회원가입 실패시 입력 데이터 값을 유지 */
-            model.addAttribute("userSignUp", userSignUp);
+            model.addAttribute("userSignUp", userSignUpRequest);
 
             /* 유효성 통과 못한 필드와 메시지를 핸들링 */
             Map<String, String> validatorResult = usersServiceImpl.validateHandling(errors);
@@ -44,9 +45,21 @@ public class UsersController {
                 model.addAttribute(key, validatorResult.get(key));
             }
             /* 회원가입 페이지로 다시 리턴 */
-            return  new ResponseEntity<>("users/createUsersForm", HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity("users/new", HttpStatus.BAD_REQUEST);
         }
-        Long userId = usersServiceImpl.signUp(userSignUp) ;
-        return new ResponseEntity<>("mainPage", HttpStatus.OK);
+        Long userId = usersServiceImpl.signUp(userSignUpRequest) ;
+        return ResponseEntity.ok("mainPage");
+    }
+
+    @PostMapping("/users/signin")
+    @Operation(summary = "로그인", description = "이메일과 비밀번호 전달", tags = {"Users"})
+    public ResponseEntity<TokenInfoResponse> login(@RequestBody UserSignInRequest userSignInRequest) throws Exception {
+        return ResponseEntity.ok(usersServiceImpl.signIn(userSignInRequest));
+    }
+
+    @PostMapping("/users/refresh")
+    @Operation(summary = "토큰 갱신", description = "토큰 갱신하기", tags = {"Users"})
+    public ResponseEntity<TokenInfoResponse> refresh(@RequestBody TokenInfoRequest tokenInfoRequest) {
+        return ResponseEntity.ok(usersServiceImpl.refresh(tokenInfoRequest));
     }
 }

@@ -5,7 +5,6 @@ import com.wanted.jungproject.domain.user.domain.Users;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor()
-public class UserSignUp {
+public class UserSignUpRequest {
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String name;
@@ -33,7 +32,7 @@ public class UserSignUp {
     private String address;
 
     @Builder
-    public  UserSignUp(String name, String email, String password, String address){
+    public UserSignUpRequest(String name, String email, String password, String address){
         this.name = name;
         this.email = email;
         this.password = password;
