@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IUsersService {
     public Long signUp(UserSignUpRequest userSignUpRequest)  throws Exception;
-    public TokenInfoResponse signIn(UserSignInRequest userSignInRequest) ;
-    public TokenInfoResponse refresh(TokenInfoRequest tokenInfoRequest);
-    public Map<String, String> validateHandling(Errors errors);
+//    public TokenInfoResponse signIn(UserSignInRequest userSignInRequest) ;
+//    public TokenInfoResponse refresh(TokenInfoRequest tokenInfoRequest);
+//    public Map<String, String> validateHandling(Errors errors);
 }

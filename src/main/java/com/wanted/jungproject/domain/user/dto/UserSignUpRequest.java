@@ -2,17 +2,25 @@ package com.wanted.jungproject.domain.user.dto;
 
 import com.wanted.jungproject.domain.user.domain.Role;
 import com.wanted.jungproject.domain.user.domain.Users;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Getter
 @NoArgsConstructor()
+@Data
 public class UserSignUpRequest {
+
+    private int id;
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String name;

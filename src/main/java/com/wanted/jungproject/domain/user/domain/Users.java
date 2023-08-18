@@ -8,7 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -34,6 +37,9 @@ public class Users {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+//    @CreationTimestamp
+//    private Timestamp createDate;
 
     @Builder
     public Users(String name, String address, String email, String password, Role role) {

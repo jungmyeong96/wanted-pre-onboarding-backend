@@ -5,6 +5,7 @@ import com.wanted.jungproject.domain.auth.entrypoint.JwtAuthenticationEntryPoint
 import com.wanted.jungproject.domain.auth.filter.ExceptionHandlerFilter;
 import com.wanted.jungproject.domain.auth.filter.JwtAuthenticationFilter;
 import com.wanted.jungproject.domain.auth.handler.JwtAccessDeniedHandler;
+import com.wanted.jungproject.domain.user.domain.Role;
 import com.wanted.jungproject.domain.user.domain.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,10 +31,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
-    private final TokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final UsersRepository usersRepository;
+//    private final TokenProvider tokenProvider;
+//    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+//    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//    private final UsersRepository usersRepository;
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -47,31 +48,43 @@ public class SecurityConfig {
         http
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .csrf(AbstractHttpConfigurer::disable) // post 방식으로 값을 전송할 때 token을 사용해야하는 보안 설정을 해제
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling
-                                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                                .accessDeniedHandler(jwtAccessDeniedHandler)
-                )
-                .sessionManagement(
-                        sessionManagement ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+//                .exceptionHandling(exceptionHandling ->
+//                        exceptionHandling
+//                                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                                .accessDeniedHandler(jwtAccessDeniedHandler)
+//                )
+//                .sessionManagement(
+//                        sessionManagement ->
+//                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/users/**").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui-jung.html", "/webjars/**").permitAll()
+//                                .requestMatchers("/users/**").authenticated()
+                                .requestMatchers("/board/**").authenticated()
+                                .requestMatchers("/admin/**").hasRole(Role.USER.name())
+                                .requestMatchers("/swagger-ui/**", "/v3/apiXdocs/**", "/swagger-ui-jung.html", "/webjars/**").permitAll()
+                                .requestMatchers("/users/signup").permitAll()
+                                .requestMatchers("/signupform").permitAll()
+                                .requestMatchers("/signinform").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
+                .formLogin(
+                        login ->
+                                login.loginPage("/signinform")
+//                                        .usernameParameter()
+                                        .loginProcessingUrl("/login")
+                                        .defaultSuccessUrl("/board/mainpage")
+                );
+//                .addFilterBefore(new JwtAuthenticationFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
 
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**");
+//    }
 
 }
