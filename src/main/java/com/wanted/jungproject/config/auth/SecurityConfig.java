@@ -29,7 +29,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 //    private final TokenProvider tokenProvider;
 //    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -60,8 +60,8 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
 //                                .requestMatchers("/users/**").authenticated()
-                                .requestMatchers("/board/**").authenticated()
-                                .requestMatchers("/admin/**").hasRole(Role.USER.name())
+                                .requestMatchers("/board/**").hasRole(Role.USER.name())
+                                .requestMatchers("/adminpage").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/swagger-ui/**", "/v3/apiXdocs/**", "/swagger-ui-jung.html", "/webjars/**").permitAll()
                                 .requestMatchers("/users/signup").permitAll()
                                 .requestMatchers("/signupform").permitAll()
@@ -82,9 +82,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**");
+    }
 
 }
