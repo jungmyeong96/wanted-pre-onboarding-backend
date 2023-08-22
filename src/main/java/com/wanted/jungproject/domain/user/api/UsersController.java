@@ -1,5 +1,6 @@
 package com.wanted.jungproject.domain.user.api;
 
+import com.wanted.jungproject.config.userDetail.domain.CustomUserDetails;
 import com.wanted.jungproject.domain.auth.dto.TokenInfoRequest;
 import com.wanted.jungproject.domain.auth.dto.TokenInfoResponse;
 import com.wanted.jungproject.domain.user.application.IUsersService;
@@ -11,6 +12,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Controller
@@ -33,6 +39,14 @@ public class UsersController {
 //        System.out.println(userSignInRequest);
 //        return "/board/mainPage";
 //    }
+
+    @GetMapping("/users/info")
+    @ResponseBody
+    public String usersInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        System.out.println("customUserDetails:" + customUserDetails.getUsername());
+        System.out.println("customUserDetails:" + customUserDetails.getAttributes());
+        return "세션정보확인";
+    }
 
 
     @PostMapping("/users/signup") //회원가입 정보 전달 메인 페이지로 이동

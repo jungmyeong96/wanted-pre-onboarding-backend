@@ -22,7 +22,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 200)
     private String name;
 
     @Column(length = 60)
@@ -38,16 +38,24 @@ public class Users {
     @Column(nullable = false)
     private Role role;
 
+    @Column()
+    private String provider;
+
+    @Column()
+    private String providerId;
+
 //    @CreationTimestamp
 //    private Timestamp createDate;
 
     @Builder
-    public Users(String name, String address, String email, String password, Role role) {
+    public Users(String name, String address, String email, String password, Role role, String provider, String providerId) {
         this.name = name;
         this.address = address;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
     }
 
     public Users hashPassword(PasswordEncoder passwordEncoder) {

@@ -1,5 +1,6 @@
 package com.wanted.jungproject.config.auth;
 
+import com.wanted.jungproject.config.auth.application.CustomOauthUserService;
 import com.wanted.jungproject.domain.auth.application.TokenProvider;
 import com.wanted.jungproject.domain.auth.entrypoint.JwtAuthenticationEntryPoint;
 import com.wanted.jungproject.domain.auth.filter.ExceptionHandlerFilter;
@@ -8,6 +9,7 @@ import com.wanted.jungproject.domain.auth.handler.JwtAccessDeniedHandler;
 import com.wanted.jungproject.domain.user.domain.Role;
 import com.wanted.jungproject.domain.user.domain.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.security.Principal;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
@@ -35,13 +39,11 @@ public class SecurityConfig {
 //    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 //    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 //    private final UsersRepository usersRepository;
-    @Value("${jwt.secret}")
-    private String secretKey;
+//    @Value("${jwt.secret}")
+//    private String secretKey;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private CustomOauthUserService customOauthUserService;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -60,21 +62,28 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
 //                                .requestMatchers("/users/**").authenticated()
+//                                .requestMatchers("/oauth2/**").permitAll()
+//                                .requestMatchers("/users/signup").permitAll()
+//                                .requestMatchers("/signupform").permitAll()
+//                                .requestMatchers("/signinform").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/apiXdocs/**", "/swagger-ui-jung.html", "/webjars/**").permitAll()
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers("/board/**").hasRole(Role.USER.name())
                                 .requestMatchers("/adminpage").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/swagger-ui/**", "/v3/apiXdocs/**", "/swagger-ui-jung.html", "/webjars/**").permitAll()
-                                .requestMatchers("/users/signup").permitAll()
-                                .requestMatchers("/signupform").permitAll()
-                                .requestMatchers("/signinform").permitAll()
-                                .requestMatchers("/").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .formLogin(
                         login ->
                                 login.loginPage("/signinform")
-//                                        .usernameParameter()
                                         .loginProcessingUrl("/login")
                                         .defaultSuccessUrl("/board/mainpage")
+                )
+                .oauth2Login(
+                        oauth ->
+                                oauth.loginPage("/signinform").userInfoEndpoint(
+                                        userinfo ->
+                                                userinfo.userService(customOauthUserService)
+                                )
                 );
 //                .addFilterBefore(new JwtAuthenticationFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
 //                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);

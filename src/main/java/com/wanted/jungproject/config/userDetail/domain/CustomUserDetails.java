@@ -5,14 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 @Builder
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private Users users; //콤포지션
+    private Map<String, Object> attributes;
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
@@ -25,8 +34,15 @@ public class CustomUserDetails implements UserDetails {
         return collect;
     }
 
+    //일반 로그인
     public CustomUserDetails(Users users) {
         this.users = users;
+    }
+
+    //OAuth 로그인
+    public CustomUserDetails(Users users, Map<String, Object> attributes) {
+        this.users = users;
+        this.attributes = attributes;
     }
 
     @Override
@@ -57,5 +73,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
